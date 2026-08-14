@@ -1,6 +1,6 @@
 # Bread-predictor
 
-A personal AI project that predicts how many Indian Breads (Bread) to eat per meal — and
+A personal AI project that predicts how many Indian Breads (Roti) to eat per meal — and
 recommends a matching recipe — based on daily context (workout, sleep, mood,
 curry type, hunger).
 
