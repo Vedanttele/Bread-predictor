@@ -211,6 +211,63 @@ def test_real_daily_context_csv_never_modified_by_raw_feedback(tmp_path):
 
 
 # ---------------------------------------------------------------------------
+# Charts
+# ---------------------------------------------------------------------------
+
+def _sample_trend_df():
+    return pd.DataFrame({
+        "date": pd.to_datetime(["2026-08-01", "2026-08-02", "2026-08-03"]),
+        "target_roti_count": [3, 2, 4],
+        "actual_roti_count": [2, 2, 3],
+        "target_protein_target_g": [42.0, 38.0, 50.0],
+        "actual_protein_g": [15.5, 14.0, 17.0],
+    })
+
+
+def test_build_trend_chart_has_two_series_correct_colors():
+    df = _sample_trend_df()
+    fig = al.build_trend_chart(df, "target_roti_count", "actual_roti_count", "Rotis")
+    assert len(fig.data) == 2
+    assert fig.data[0].name == "Target"
+    assert fig.data[0].marker.color == al.COLOR_TARGET
+    assert fig.data[1].name == "Actual"
+    assert fig.data[1].marker.color == al.COLOR_ACTUAL
+
+
+def test_build_pct_of_target_chart_computes_correct_percentages():
+    df = _sample_trend_df()
+    fig = al.build_pct_of_target_chart(df, "target_protein_target_g", "actual_protein_g", "protein")
+    # 15.5/42.0*100 = 36.9, 14.0/38.0*100 = 36.8, 17.0/50.0*100 = 34.0
+    assert list(fig.data[0].y) == pytest.approx([36.9, 36.8, 34.0], abs=0.1)
+
+
+def test_build_pct_of_target_chart_is_single_series_with_reference_line():
+    df = _sample_trend_df()
+    fig = al.build_pct_of_target_chart(df, "target_protein_target_g", "actual_protein_g", "protein")
+    assert len(fig.data) == 1  # not a misleading two-bar comparison
+    assert fig.data[0].marker.color == al.COLOR_ACTUAL
+    # the 100% reference line is a layout shape, not a second data series
+    assert len(fig.layout.shapes) == 1
+    assert fig.layout.shapes[0].y0 == 100
+
+
+def test_build_pct_of_target_chart_never_exceeds_reasonable_bounds_for_protein_data():
+    """Regression guard for the actual scale mismatch this chart exists to
+    fix: with real recipe_database.json values (max 19.0g protein) against
+    real training-data targets (min 31.2g), % of target should always be
+    well under 100% — if this ever shows >100%+ regularly, the underlying
+    scale assumption this chart documents has changed and the chart choice
+    should be revisited."""
+    df = pd.DataFrame({
+        "date": pd.to_datetime(["2026-08-01"]),
+        "target_protein_target_g": [31.2],  # lowest observed target
+        "actual_protein_g": [19.0],  # highest possible recipe protein
+    })
+    fig = al.build_pct_of_target_chart(df, "target_protein_target_g", "actual_protein_g", "protein")
+    assert fig.data[0].y[0] < 100  # even the best case never reaches the target
+
+
+# ---------------------------------------------------------------------------
 # Real trained models
 # ---------------------------------------------------------------------------
 

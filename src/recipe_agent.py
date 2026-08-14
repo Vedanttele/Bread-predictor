@@ -78,7 +78,23 @@ def score_recipe(recipe: dict, protein_target_g: float, fibre_target_g: float, v
     the two targets (both fields are in grams, roughly comparable scale,
     so a raw sum is a simple, defensible heuristic — not normalized or
     weighted beyond that). A vitamin_focus match subtracts a flat bonus
-    (see VITAMIN_MATCH_BONUS)."""
+    (see VITAMIN_MATCH_BONUS).
+
+    Known scale gap, deliberately left as-is: protein_target_g ranges
+    31.2-52.0g in the training data, but no single recipe in
+    recipe_database.json exceeds 19.0g protein (very plausibly because
+    protein_target_g reflects a whole-day or whole-meal goal, while a
+    recipe is one dish). That means abs(protein_g - protein_target_g) is
+    always protein_target_g - protein_g (target is never reached), which
+    reduces to "prefer whichever candidate has more protein" — the
+    mathematically correct behavior when a target is unreachable by any
+    candidate, not a bug. What it does mean: don't read the raw distance
+    value as "how close this got to the target" for protein specifically
+    (fibre_target_g doesn't have this problem — recipe fibre spans 3-14g,
+    almost fully overlapping the 8-14g target range). The dashboard
+    (src/app_logic.py's build_pct_of_target_chart) shows this as % of
+    target for protein rather than a misleading grams-vs-grams gap.
+    """
     nutrition_distance = abs(recipe["protein_g"] - protein_target_g) + abs(recipe["fibre_g"] - fibre_target_g)
     vitamin_match = vitamin_focus in recipe.get("vitamin_tags", [])
     return nutrition_distance - (VITAMIN_MATCH_BONUS if vitamin_match else 0.0)

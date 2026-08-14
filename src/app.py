@@ -165,9 +165,12 @@ with tab_dashboard:
     else:
         st.subheader("Most recent day")
         latest = log_df.iloc[-1]
+        protein_pct = latest["actual_protein_g"] / latest["target_protein_target_g"] * 100
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Roti count", int(latest["actual_roti_count"]), delta=int(latest["delta_roti_count"]))
-        c2.metric("Protein", f"{latest['actual_protein_g']:.1f} g", delta=f"{latest['delta_protein_g']:+.1f} g")
+        c2.metric("Protein (this recipe)", f"{protein_pct:.0f}% of target",
+                  help="A single recipe's protein vs. your daily/meal protein target aren't the same "
+                       "scale (see the note below the trend chart) — shown as % of target, not grams.")
         c3.metric("Fibre", f"{latest['actual_fibre_g']:.1f} g", delta=f"{latest['delta_fibre_g']:+.1f} g")
         c4.metric("Vitamin match", "✅" if latest["vitamin_match"] else "❌")
 
@@ -176,10 +179,19 @@ with tab_dashboard:
             al.build_trend_chart(log_df, "target_roti_count", "actual_roti_count", "Rotis"),
             width='stretch',
         )
+
         st.plotly_chart(
-            al.build_trend_chart(log_df, "target_protein_target_g", "actual_protein_g", "Protein (g)"),
+            al.build_pct_of_target_chart(log_df, "target_protein_target_g", "actual_protein_g", "protein"),
             width='stretch',
         )
+        st.caption(
+            "Shown as % of target, not grams: recipe_database.json's recipes top out at 19.0g protein "
+            "(a single dish), while protein_target_g ranges 31.2-52.0g in the training data — very "
+            "plausibly a whole-day or whole-meal goal, not one dish's contribution. No single recipe "
+            "can reach that on its own, so a grams-vs-grams chart always showed the same large gap "
+            "regardless of how good the pick was. See docs/project_report.md for the full note."
+        )
+
         st.plotly_chart(
             al.build_trend_chart(log_df, "target_fibre_target_g", "actual_fibre_g", "Fibre (g)"),
             width='stretch',

@@ -201,6 +201,24 @@ generation, not the other way around.
   European 8, Mexican 7). Layer 2 can only be as good as its candidate
   pool — a bad day for available recipes matching the time budget can
   leave only 1-2 real candidates for the model to choose from.
+- **`protein_target_g` and recipe protein are on different scales — found
+  and fixed.** `protein_target_g` ranges 31.2-52.0g in the training data;
+  every recipe in `recipe_database.json` tops out at 19.0g (min 4.0g,
+  mean 13.1g) — no single dish can ever reach even the lowest historical
+  target, very plausibly because the target reflects a whole-day or
+  whole-meal goal while a recipe is one dish, and no per-roti nutrition
+  data exists to fill the gap without inventing a number. The ranking
+  math in `src/recipe_agent.py` isn't actually broken by this — when a
+  target is unreachable by any candidate, minimizing the distance
+  correctly reduces to "prefer more protein," which is the right
+  behavior — but the dashboard's original grams-vs-grams chart made it
+  look broken (always the same large gap, regardless of how good the
+  pick was). Fixed by showing protein as % of target
+  (`build_pct_of_target_chart` in `src/app_logic.py`) instead of a
+  misleading two-bar comparison; documented in `score_recipe`'s
+  docstring. `fibre_target_g` doesn't have this problem — recipe fibre
+  spans 3-14g, nearly the full 8-14g target range — and keeps the
+  grams-vs-grams chart.
 - **One unresolved data pattern**: `pairs_with_roti` is `True` for every
   Indian recipe and `False` for every European/Mexican one, with no
   exceptions — plausible, but flagged as an info note

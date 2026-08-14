@@ -230,3 +230,45 @@ def build_trend_chart(df: pd.DataFrame, target_col: str, actual_col: str, y_titl
         bargap=0.25,
     )
     return fig
+
+
+def build_pct_of_target_chart(df: pd.DataFrame, target_col: str, actual_col: str, label: str) -> go.Figure:
+    """Percent of target met — for a metric where "actual" and "target"
+    are NOT directly comparable quantities (see protein_target_g below),
+    a grouped-bar chart of the raw numbers is actively misleading: it
+    visually implies the two bars should be roughly equal, when they
+    structurally can't be. This shows actual/target as a single-series
+    bar with a dashed reference line at 100%, which is honest regardless
+    of the underlying scale gap — a real percentage rather than a
+    fabricated equivalence.
+
+    Used for protein_target_g specifically: recipe_database.json's
+    protein_g tops out at 19.0g (a single dish), while protein_target_g
+    ranges 31.2-52.0g in the training data (very plausibly a whole-day or
+    whole-meal goal, not one dish's contribution) — no recipe can ever
+    reach even the lowest observed target, so a grams-vs-grams comparison
+    always shows the same large gap regardless of how good the pick was.
+    fibre_target_g doesn't have this problem (recipe range 3-14g overlaps
+    target range 8-14g almost completely) and keeps the grouped-bar chart.
+    """
+    pct = (df[actual_col] / df[target_col] * 100).round(1)
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=df["date"], y=pct, name=f"% of {label} target met",
+        marker_color=COLOR_ACTUAL, marker_line_width=0,
+    ))
+    fig.add_hline(y=100, line_dash="dash", line_color=COLOR_TARGET, line_width=2,
+                  annotation_text="Target (100%)", annotation_position="top left",
+                  annotation_font_color=COLOR_TARGET)
+    fig.update_layout(
+        plot_bgcolor=COLOR_SURFACE,
+        paper_bgcolor=COLOR_SURFACE,
+        font_color=COLOR_TEXT_SECONDARY,
+        yaxis_title=f"% of {label} target",
+        xaxis=dict(showgrid=False, linecolor=COLOR_AXIS),
+        yaxis=dict(showgrid=True, gridcolor=COLOR_GRIDLINE, linecolor=COLOR_AXIS),
+        showlegend=False,
+        margin=dict(l=10, r=10, t=40, b=10),
+        bargap=0.25,
+    )
+    return fig
