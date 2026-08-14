@@ -113,8 +113,11 @@ ask Layer 2 for a recipe:
 
 ![Dashboard tab, empty state](docs/screenshots/dashboard_tab_empty.png)
 
-Once you log a few days, the Dashboard tab fills in with target-vs-actual
-stat tiles and trend charts.
+**Dashboard tab, after a week of logged days** — stat tiles with deltas
+for the most recent day, target-vs-actual trend charts for roti count,
+protein, and fibre, a vitamin-focus match table, and the full log:
+
+![Dashboard tab, populated with a week of logged days](docs/screenshots/dashboard_tab.png)
 
 ## Hard constraints
 
