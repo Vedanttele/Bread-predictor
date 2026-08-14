@@ -1,6 +1,6 @@
-# roti-predictor
+# Bread-predictor
 
-A personal AI project that predicts how many Indian rotis (Bread) to eat per meal — and
+A personal AI project that predicts how many Indian Breads (Bread) to eat per meal — and
 recommends a matching recipe — based on daily context (workout, sleep, mood,
 curry type, hunger).
 
@@ -10,7 +10,7 @@ Two layers, deliberately kept separate:
 
 **Layer 1 — ML (tabular, not deep learning).**
 Input: daily context features (workout, sleep, mood, curry type, hunger, etc.).
-Output: `roti_count`, `protein_target_g`, `fibre_target_g`, `vitamin_focus`.
+Output: `Bread_count`, `protein_target_g`, `fibre_target_g`, `vitamin_focus`.
 Dataset is small, so this stays classic tabular ML (e.g. gradient-boosted
 trees / linear models), not a neural net.
 
@@ -21,7 +21,7 @@ explains the match in natural language.
 It does **not** invent nutrition numbers — see hard constraints below.
 
 ```
-daily context ──▶ [Layer 1: ML model] ──▶ roti_count, protein_target_g,
+daily context ──▶ [Layer 1: ML model] ──▶ Bread_count, protein_target_g,
                                             fibre_target_g, vitamin_focus
                                                     │
                           meal_prep_time_min ───────┤
@@ -49,8 +49,8 @@ why Layer 2 can't hallucinate a nutrition value, known limitations):
 ### Install
 
 ```bash
-git clone https://github.com/Vedanttele/roti-predictor.git
-cd roti-predictor
+git clone https://github.com/Vedanttele/Bread-predictor.git
+cd Bread-predictor
 pip install -r requirements.txt
 ```
 
@@ -114,7 +114,7 @@ ask Layer 2 for a recipe:
 ![Dashboard tab, empty state](docs/screenshots/dashboard_tab_empty.png)
 
 **Dashboard tab, after a week of logged days** — stat tiles with deltas
-for the most recent day, target-vs-actual trend charts for roti count,
+for the most recent day, target-vs-actual trend charts for Bread count,
 protein, and fibre, a vitamin-focus match table, and the full log:
 
 ![Dashboard tab, populated with a week of logged days](docs/screenshots/dashboard_tab.png)
@@ -131,7 +131,7 @@ changes.
 ## Project layout
 
 ```
-roti-predictor/
+Bread-predictor/
 ├── GOVERNANCE.md              # foundational requirements — single source of truth
 ├── PHASES.md                  # phase plan and status
 ├── docs/
@@ -148,7 +148,7 @@ roti-predictor/
 ├── src/
 │   ├── data_pipeline.py       # multi-source raw CSV ingestion + cleaning
 │   ├── features.py            # feature signal analysis (correlation, VIF, encoding)
-│   ├── train_model.py         # roti_count / protein_target_g / fibre_target_g models
+│   ├── train_model.py         # Bread_count / protein_target_g / fibre_target_g models
 │   ├── train_vitamin_model.py # vitamin_focus classifier
 │   ├── recipe_db.py           # recipe database loader/validator
 │   ├── recipe_agent.py        # Layer 2: retrieval + Claude explanation
