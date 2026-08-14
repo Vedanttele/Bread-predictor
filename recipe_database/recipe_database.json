@@ -1,0 +1,385 @@
+{
+  "note": "protein_g and fibre_g are calculated from standard USDA-equivalent ingredient nutrition data scaled to listed ingredients, per single serving. Not lab-verified. Spot check before relying on this for tracking.",
+  "recipe_count": 24,
+  "recipes": [
+    {
+      "name": "Moong Dal Tadka",
+      "cuisine": "Indian",
+      "main_ingredients": "yellow moong dal, tomato, cumin, garlic",
+      "protein_g": 14.0,
+      "fibre_g": 8.0,
+      "calories": 220,
+      "prep_time_min": 20,
+      "vitamin_tags": [
+        "Iron",
+        "B12"
+      ],
+      "pairs_with_roti": true,
+      "suitable_meal": "both",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Chana Masala",
+      "cuisine": "Indian",
+      "main_ingredients": "chickpeas, onion, tomato, garam masala",
+      "protein_g": 15.5,
+      "fibre_g": 10.5,
+      "calories": 280,
+      "prep_time_min": 30,
+      "vitamin_tags": [
+        "Iron",
+        "Vitamin C"
+      ],
+      "pairs_with_roti": true,
+      "suitable_meal": "both",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Paneer Bhurji",
+      "cuisine": "Indian",
+      "main_ingredients": "paneer, onion, capsicum, tomato",
+      "protein_g": 18.0,
+      "fibre_g": 3.0,
+      "calories": 260,
+      "prep_time_min": 15,
+      "vitamin_tags": [
+        "Vitamin D",
+        "B12"
+      ],
+      "pairs_with_roti": true,
+      "suitable_meal": "both",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Rajma Curry",
+      "cuisine": "Indian",
+      "main_ingredients": "kidney beans, onion, tomato, ginger",
+      "protein_g": 15.0,
+      "fibre_g": 13.0,
+      "calories": 270,
+      "prep_time_min": 45,
+      "vitamin_tags": [
+        "Iron",
+        "Multivitamin"
+      ],
+      "pairs_with_roti": true,
+      "suitable_meal": "dinner",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Palak Paneer",
+      "cuisine": "Indian",
+      "main_ingredients": "spinach, paneer, garlic, cream",
+      "protein_g": 16.5,
+      "fibre_g": 5.0,
+      "calories": 300,
+      "prep_time_min": 30,
+      "vitamin_tags": [
+        "Iron",
+        "Vitamin C",
+        "Vitamin D"
+      ],
+      "pairs_with_roti": true,
+      "suitable_meal": "both",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Bhindi Masala (dry)",
+      "cuisine": "Indian",
+      "main_ingredients": "okra, onion, spices",
+      "protein_g": 4.0,
+      "fibre_g": 6.5,
+      "calories": 150,
+      "prep_time_min": 20,
+      "vitamin_tags": [
+        "Vitamin C"
+      ],
+      "pairs_with_roti": true,
+      "suitable_meal": "lunch",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Masoor Dal",
+      "cuisine": "Indian",
+      "main_ingredients": "red lentils, garlic, cumin, tomato",
+      "protein_g": 13.0,
+      "fibre_g": 7.5,
+      "calories": 200,
+      "prep_time_min": 15,
+      "vitamin_tags": [
+        "Iron"
+      ],
+      "pairs_with_roti": true,
+      "suitable_meal": "both",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Mixed Vegetable Sabzi",
+      "cuisine": "Indian",
+      "main_ingredients": "carrot, beans, peas, potato",
+      "protein_g": 5.0,
+      "fibre_g": 7.0,
+      "calories": 180,
+      "prep_time_min": 20,
+      "vitamin_tags": [
+        "Vitamin C",
+        "Multivitamin"
+      ],
+      "pairs_with_roti": true,
+      "suitable_meal": "lunch",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Caprese Salad with Chickpeas",
+      "cuisine": "European",
+      "main_ingredients": "tomato, mozzarella, basil, chickpeas",
+      "protein_g": 16.0,
+      "fibre_g": 6.0,
+      "calories": 320,
+      "prep_time_min": 10,
+      "vitamin_tags": [
+        "Vitamin C",
+        "B12"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "lunch",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Mushroom Risotto",
+      "cuisine": "European",
+      "main_ingredients": "arborio rice, mushroom, parmesan, garlic",
+      "protein_g": 10.0,
+      "fibre_g": 3.0,
+      "calories": 420,
+      "prep_time_min": 40,
+      "vitamin_tags": [
+        "Vitamin D"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "dinner",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Spinach and Ricotta Stuffed Shells",
+      "cuisine": "European",
+      "main_ingredients": "pasta shells, spinach, ricotta",
+      "protein_g": 19.0,
+      "fibre_g": 5.0,
+      "calories": 380,
+      "prep_time_min": 45,
+      "vitamin_tags": [
+        "Iron",
+        "Vitamin D"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "dinner",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Greek Lentil Salad",
+      "cuisine": "European",
+      "main_ingredients": "green lentils, feta, cucumber, olive oil",
+      "protein_g": 17.0,
+      "fibre_g": 11.0,
+      "calories": 340,
+      "prep_time_min": 20,
+      "vitamin_tags": [
+        "Iron",
+        "Vitamin C"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "lunch",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "White Bean and Kale Stew",
+      "cuisine": "European",
+      "main_ingredients": "white beans, kale, garlic, vegetable stock",
+      "protein_g": 14.5,
+      "fibre_g": 12.0,
+      "calories": 260,
+      "prep_time_min": 30,
+      "vitamin_tags": [
+        "Iron",
+        "Vitamin C"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "dinner",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Caprese Panini",
+      "cuisine": "European",
+      "main_ingredients": "mozzarella, tomato, basil, ciabatta",
+      "protein_g": 14.0,
+      "fibre_g": 3.0,
+      "calories": 350,
+      "prep_time_min": 10,
+      "vitamin_tags": [
+        "Vitamin D"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "lunch",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Roasted Vegetable Quinoa Bowl",
+      "cuisine": "European",
+      "main_ingredients": "quinoa, zucchini, bell pepper, feta",
+      "protein_g": 13.0,
+      "fibre_g": 8.0,
+      "calories": 310,
+      "prep_time_min": 30,
+      "vitamin_tags": [
+        "Vitamin C",
+        "Iron"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "both",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Black Bean Tacos",
+      "cuisine": "Mexican",
+      "main_ingredients": "black beans, corn tortilla, salsa, avocado",
+      "protein_g": 13.0,
+      "fibre_g": 14.0,
+      "calories": 300,
+      "prep_time_min": 20,
+      "vitamin_tags": [
+        "Iron",
+        "Vitamin C"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "dinner",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Veggie Burrito Bowl",
+      "cuisine": "Mexican",
+      "main_ingredients": "rice, black beans, corn, peppers, cheese",
+      "protein_g": 16.0,
+      "fibre_g": 12.0,
+      "calories": 420,
+      "prep_time_min": 25,
+      "vitamin_tags": [
+        "Vitamin C",
+        "B12"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "dinner",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Chickpea Chilaquiles",
+      "cuisine": "Mexican",
+      "main_ingredients": "tortilla chips, chickpeas, salsa roja, cheese",
+      "protein_g": 15.0,
+      "fibre_g": 10.0,
+      "calories": 380,
+      "prep_time_min": 20,
+      "vitamin_tags": [
+        "Iron",
+        "Vitamin C"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "lunch",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Mexican Stuffed Bell Peppers",
+      "cuisine": "Mexican",
+      "main_ingredients": "bell pepper, black beans, rice, cheese",
+      "protein_g": 14.5,
+      "fibre_g": 9.0,
+      "calories": 310,
+      "prep_time_min": 45,
+      "vitamin_tags": [
+        "Vitamin C",
+        "Iron"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "dinner",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Elote Salad (Mexican Corn Salad)",
+      "cuisine": "Mexican",
+      "main_ingredients": "corn, cotija cheese, lime, chili powder",
+      "protein_g": 8.0,
+      "fibre_g": 5.0,
+      "calories": 230,
+      "prep_time_min": 15,
+      "vitamin_tags": [
+        "Vitamin C"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "lunch",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Refried Bean Quesadilla",
+      "cuisine": "Mexican",
+      "main_ingredients": "pinto beans, cheese, tortilla",
+      "protein_g": 17.0,
+      "fibre_g": 9.0,
+      "calories": 360,
+      "prep_time_min": 10,
+      "vitamin_tags": [
+        "Iron",
+        "B12"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "both",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Mexican Rice and Bean Salad",
+      "cuisine": "Mexican",
+      "main_ingredients": "rice, black beans, corn, lime, cilantro",
+      "protein_g": 11.0,
+      "fibre_g": 10.0,
+      "calories": 290,
+      "prep_time_min": 15,
+      "vitamin_tags": [
+        "Vitamin C",
+        "Iron"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "lunch",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Sarson ka Saag",
+      "cuisine": "Indian",
+      "main_ingredients": "mustard greens, spinach, garlic, ghee",
+      "protein_g": 6.0,
+      "fibre_g": 9.0,
+      "calories": 190,
+      "prep_time_min": 40,
+      "vitamin_tags": [
+        "Iron",
+        "Vitamin C"
+      ],
+      "pairs_with_roti": true,
+      "suitable_meal": "dinner",
+      "diet_type": "vegetarian"
+    },
+    {
+      "name": "Vegetable Paella",
+      "cuisine": "European",
+      "main_ingredients": "rice, bell pepper, peas, saffron, artichoke",
+      "protein_g": 9.0,
+      "fibre_g": 6.0,
+      "calories": 330,
+      "prep_time_min": 40,
+      "vitamin_tags": [
+        "Vitamin C"
+      ],
+      "pairs_with_roti": false,
+      "suitable_meal": "dinner",
+      "diet_type": "vegetarian"
+    }
+  ]
+}

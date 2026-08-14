@@ -1,0 +1,27 @@
+{
+  "target": "fibre_target_g",
+  "selected_model": "linear",
+  "trained_at_utc": "2026-08-14T15:51:00.922601+00:00",
+  "n_train": 176,
+  "n_test": 44,
+  "test_fraction": 0.2,
+  "numeric_features": [
+    "calories_burned",
+    "hunger_level",
+    "sleep_hours"
+  ],
+  "categorical_features": [
+    "workout_type",
+    "curry_type",
+    "curry_richness"
+  ],
+  "candidate_scores": {
+    "linear": {
+      "mae_raw": 1.4034264155369458
+    },
+    "gbm": {
+      "mae_raw": 1.7069602208164942
+    }
+  },
+  "note": null
+}

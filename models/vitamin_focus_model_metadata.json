@@ -1,0 +1,22 @@
+{
+  "target": "vitamin_focus",
+  "selected_model": "gbm",
+  "trained_at_utc": "2026-08-14T18:41:37.743127+00:00",
+  "n_train": 176,
+  "n_test": 44,
+  "numeric_features": [
+    "calories_burned",
+    "hunger_level",
+    "sleep_hours"
+  ],
+  "categorical_features": [
+    "workout_type",
+    "curry_type",
+    "curry_richness"
+  ],
+  "majority_class_baseline_accuracy": 0.3409090909090909,
+  "candidate_scores": {
+    "linear": 0.5,
+    "gbm": 0.5681818181818182
+  }
+}

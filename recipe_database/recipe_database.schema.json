@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Recipe database entry",
+  "description": "One recipe from recipe_database.json. protein_g/fibre_g/calories are calculated from standard USDA-equivalent ingredient data per the file's own top-level 'note' field — not lab-verified, spot-check recommended. Never generated or estimated by any model/LLM in this repo; src/recipe_db.py validates and flags, never edits, these values.",
+  "type": "object",
+  "required": [
+    "name", "cuisine", "diet_type", "main_ingredients", "protein_g", "fibre_g",
+    "calories", "prep_time_min", "vitamin_tags", "pairs_with_roti", "suitable_meal"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Recipe name. Used as the natural unique key (no separate recipe_id field) — must be unique after case/whitespace normalization."
+    },
+    "cuisine": {
+      "type": "string",
+      "description": "Observed vocabulary: Indian, European, Mexican."
+    },
+    "diet_type": {
+      "type": "string",
+      "description": "Observed vocabulary: vegetarian (the whole database is vegetarian per its description)."
+    },
+    "main_ingredients": {
+      "type": "string",
+      "description": "Free-text, comma-separated ingredient summary."
+    },
+    "protein_g": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Grams of protein per serving. Calculated (see file-level note), not lab-verified."
+    },
+    "fibre_g": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Grams of fibre per serving. Calculated (see file-level note), not lab-verified."
+    },
+    "calories": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Calories per serving."
+    },
+    "prep_time_min": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Minutes to prepare, compared against meal_prep_time_min from Layer 1/Layer 2."
+    },
+    "vitamin_tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Observed vocabulary: Iron, B12, Vitamin C, Vitamin D, Multivitamin — matches the vitamin_focus vocabulary in src/data_pipeline.py so Layer 1 output and this database can be joined on it."
+    },
+    "pairs_with_roti": {
+      "type": "boolean",
+      "description": "Whether this recipe is eaten with roti at all. In the current data this is True for every Indian recipe and False for every European/Mexican one — flagged by src/recipe_db.py as worth a second look, not treated as an error."
+    },
+    "suitable_meal": {
+      "type": "string",
+      "description": "Observed vocabulary: lunch, dinner, both. (breakfast/snack not observed but not excluded going forward.)"
+    }
+  },
+  "additionalProperties": false
+}

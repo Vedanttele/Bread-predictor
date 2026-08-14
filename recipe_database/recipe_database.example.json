@@ -1,0 +1,20 @@
+{
+  "_comment": "ILLUSTRATIVE STRUCTURE ONLY. Every value below is a made-up placeholder to show the shape of an entry — none of it is real nutrition data and none of it should ever be read by Layer 2 or shown to a user. The real recipe_database.json (Phase 4, now populated) is a sibling file in this directory.",
+  "note": "PLACEHOLDER - see the real recipe_database.json for the actual sourcing note",
+  "recipe_count": 1,
+  "recipes": [
+    {
+      "name": "PLACEHOLDER Dal Tadka",
+      "cuisine": "Indian",
+      "diet_type": "vegetarian",
+      "main_ingredients": "PLACEHOLDER, do not use",
+      "protein_g": 0,
+      "fibre_g": 0,
+      "calories": 0,
+      "prep_time_min": 0,
+      "vitamin_tags": ["PLACEHOLDER"],
+      "pairs_with_roti": false,
+      "suitable_meal": "PLACEHOLDER"
+    }
+  ]
+}

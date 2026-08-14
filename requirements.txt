@@ -1,0 +1,25 @@
+# Layer 1 (tabular ML)
+pandas
+numpy
+scikit-learn
+joblib
+
+# Data contract validation
+jsonschema
+
+# Testing
+pytest
+
+# EDA report tables (df.to_markdown)
+tabulate
+
+# Notebooks (Phase 2 EDA)
+jupyter
+matplotlib
+
+# Layer 2 (recipe recommendation agent)
+anthropic
+
+# Web interface / dashboard
+streamlit
+plotly
