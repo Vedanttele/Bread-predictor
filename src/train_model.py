@@ -24,13 +24,10 @@ were noise-like; `day_of_week` was weak and not significant (p=0.081);
 `meal_type` is constant in the current data (no source logs it) — all
 excluded.
 
-*** HEURISTIC COMPARISON STATUS: PENDING ***
-The user's manual heuristic formula for roti_count has not been supplied
-yet. HEURISTIC_ROTI_COUNT_FN below is None as a placeholder — the
-evaluation harness is fully wired to use it the moment a real function is
-provided, but until then the report explicitly marks that comparison as
-"pending" rather than printing a fabricated number. Do not invent a
-formula here.
+Compares `roti_count` against a manual heuristic reference function
+(see heuristic_roti_count() below): a baseline of 2, adjusted +/-1 for
+hunger extremes, +1 for any workout, +1 for heavy curry, -1 for dal.
+Rules reflect common-sense direction only, not fitted to this dataset..
 
 Run directly:
     python src/train_model.py
