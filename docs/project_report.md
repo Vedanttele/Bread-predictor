@@ -169,6 +169,19 @@ user ever sees traces back to a value that was in `recipe_database.json`
 before the prompt was built — the retrieval step happens before
 generation, not the other way around.
 
+**No Claude account required.** Steps 1-3 above (filter, rank, build the
+top-N candidate list) are plain code with no model call. If Claude isn't
+reachable — no credentials, rate-limited, network down — `recommend_recipe`
+catches that (`anthropic.APIError`, and the bare `TypeError` the SDK
+raises specifically when no credential source resolves at all) and falls
+back to `build_deterministic_explanation`: the same top-ranked candidate,
+with a plain string-template explanation built from real database fields
+instead of Claude's natural-language one. This means the whole app —
+Layer 1 predictions and Layer 2 recommendations both — works for anyone
+who clones the repo with zero Anthropic setup. A genuine bug elsewhere in
+the module (not an API/auth failure) still raises normally; the fallback
+is scoped narrowly, not a blanket try/except.
+
 ## Known limitations
 
 - **Dataset size: 220 days, one household.** Small by ML standards — the

@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import anthropic
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -161,6 +162,34 @@ def test_candidate_summary_only_includes_declared_fields():
 
 
 # ---------------------------------------------------------------------------
+# No-LLM fallback — makes the app usable with no Anthropic account at all
+# ---------------------------------------------------------------------------
+
+def test_build_deterministic_explanation_picks_top_ranked_candidate():
+    candidates = [make_recipe(name="Best"), make_recipe(name="Second")]
+    result = agent.build_deterministic_explanation(candidates)
+    assert result["status"] == "ok"
+    assert result["mode"] == "deterministic"
+    assert result["chosen_recipe"]["name"] == "Best"  # candidates[0], i.e. already top-ranked
+
+
+def test_build_deterministic_explanation_references_only_real_recipe_numbers():
+    recipe = make_recipe(name="Chana Masala", protein_g=15.5, fibre_g=10.5, calories=280, prep_time_min=30)
+    result = agent.build_deterministic_explanation([recipe])
+    assert "15.5" in result["explanation"]
+    assert "10.5" in result["explanation"]
+    assert "280" in result["explanation"]
+    assert "30" in result["explanation"]
+
+
+def test_build_deterministic_explanation_no_api_call_possible():
+    """There's no client parameter at all here — structurally cannot call
+    the API, not just chooses not to."""
+    import inspect
+    assert "client" not in inspect.signature(agent.build_deterministic_explanation).parameters
+
+
+# ---------------------------------------------------------------------------
 # End-to-end pipeline (mocked client)
 # ---------------------------------------------------------------------------
 
@@ -202,6 +231,66 @@ class TestPipelineOnRealData:
         )
         assert result["status"] == "ok"
         assert result["chosen_recipe"]["name"] == "Flex Meal"
+
+    def test_success_path_has_mode_llm(self):
+        recipes = agent.load_recipes()
+        fitting = agent.filter_by_prep_time(recipes, 25)
+        top3 = agent.rank_candidates(fitting, 44.0, 11.0, "Iron")
+        client = fake_anthropic_client(top3[0]["name"])
+        result = agent.recommend_recipe(self.LAYER1, meal_prep_time_min=25, client=client)
+        assert result["mode"] == "llm"
+        assert "note" not in result
+
+    def test_use_llm_false_never_touches_the_client(self):
+        client = fake_anthropic_client("shouldn't matter")
+        result = agent.recommend_recipe(self.LAYER1, meal_prep_time_min=25, client=client, use_llm=False)
+        assert result["status"] == "ok"
+        assert result["mode"] == "deterministic"
+        client.messages.create.assert_not_called()
+
+    def test_falls_back_on_missing_credentials_type_error(self):
+        """The exact real-world case: no ANTHROPIC_API_KEY, no `ant auth
+        login` profile — the anthropic SDK raises a bare TypeError for
+        this (not one of its own exception classes), so this is the
+        specific failure recommend_recipe must catch for the app to work
+        for anyone who just cloned the repo."""
+        client = MagicMock()
+        client.messages.create.side_effect = TypeError("Could not resolve authentication method")
+        result = agent.recommend_recipe(self.LAYER1, meal_prep_time_min=25, client=client)
+        assert result["status"] == "ok"
+        assert result["mode"] == "deterministic"
+        assert "note" in result
+        assert "Claude unavailable" in result["note"]
+
+    def test_falls_back_on_anthropic_api_error(self):
+        client = MagicMock()
+        client.messages.create.side_effect = anthropic.APIConnectionError(request=MagicMock())
+        result = agent.recommend_recipe(self.LAYER1, meal_prep_time_min=25, client=client)
+        assert result["status"] == "ok"
+        assert result["mode"] == "deterministic"
+        assert "note" in result
+
+    def test_fallback_still_respects_ranking_and_filters(self, monkeypatch):
+        """The deterministic fallback isn't a separate, cruder path — it
+        uses the exact same filtered/ranked candidate list the LLM path
+        would have seen."""
+        synthetic = [
+            make_recipe(name="Far", protein_g=1.0, fibre_g=1.0, vitamin_tags=[]),
+            make_recipe(name="Close", protein_g=44.0, fibre_g=11.0, vitamin_tags=["Iron"]),
+        ]
+        monkeypatch.setattr(agent, "load_recipes", lambda path=None: synthetic)
+        client = MagicMock()
+        client.messages.create.side_effect = TypeError("no credentials")
+        result = agent.recommend_recipe(self.LAYER1, meal_prep_time_min=25, client=client)
+        assert result["chosen_recipe"]["name"] == "Close"
+
+    def test_unrelated_bug_is_not_swallowed_by_the_fallback(self):
+        """A real bug (not an auth/API failure) must still raise — the
+        fallback is scoped to Claude-unavailable, not a catch-all."""
+        client = MagicMock()
+        client.messages.create.side_effect = KeyError("some unrelated bug")
+        with pytest.raises(KeyError):
+            agent.recommend_recipe(self.LAYER1, meal_prep_time_min=25, client=client)
 
     def test_meal_type_none_is_backward_compatible(self):
         recipes = agent.load_recipes()

@@ -166,9 +166,38 @@ def ask_claude_to_choose(
     return json.loads(text)
 
 
+def build_deterministic_explanation(candidates: list[dict]) -> dict:
+    """No LLM call at all — used when Claude isn't reachable (no
+    credentials, rate-limited, network down, etc.) so the app is fully
+    usable by anyone who clones the repo without an Anthropic account.
+
+    Picks candidates[0] — already the top-ranked pick from the same
+    filter+rank logic used to build Claude's candidate list — and builds
+    the explanation as a plain string template over real
+    recipe_database.json fields. Trivially satisfies "never invent
+    nutrition numbers" (GOVERNANCE.md HC-1): there's no model in the loop
+    to invent anything from.
+    """
+    top = candidates[0]
+    explanation = (
+        f"Picked automatically (no AI call): the closest match to your protein and fibre "
+        f"targets within your available time, out of {len(candidates)} candidate recipe(s) "
+        f"considered. Provides {top['protein_g']:.1f}g protein, {top['fibre_g']:.1f}g fibre, "
+        f"{top['calories']} calories, and is ready in {top['prep_time_min']} minutes."
+    )
+    return {
+        "status": "ok",
+        "mode": "deterministic",
+        "chosen_recipe": top,
+        "explanation": explanation,
+        "candidates_considered": [build_candidate_summary(c) for c in candidates],
+    }
+
+
 def recommend_recipe(
     layer1_output: dict, meal_prep_time_min: int, meal_type: str | None = None,
     db_path: Path = DEFAULT_DB_PATH, client: anthropic.Anthropic | None = None,
+    use_llm: bool = True,
 ) -> dict:
     """Full Layer 2 pipeline.
 
@@ -176,11 +205,30 @@ def recommend_recipe(
     the database's suitable_meal field (a recipe tagged 'both' always
     qualifies). None means don't filter on it.
 
+    use_llm=False skips Claude entirely and uses the deterministic
+    top-ranked pick (see build_deterministic_explanation) — set this to
+    avoid even attempting a network call. Left True (the default), a
+    Claude API failure automatically falls back to the same deterministic
+    pick rather than erroring out, so the whole app works for anyone who
+    clones the repo with no Anthropic account at all. Caught: any
+    anthropic.APIError (bad/expired key, rate limit, network down — a
+    real server-side or transport failure), AND bare TypeError — the
+    anthropic SDK raises a plain TypeError, not one of its own exception
+    types, specifically when NO credential source resolves at all (no
+    ANTHROPIC_API_KEY, no `ant auth login` profile) — the single most
+    common case for someone who just cloned the repo. The try block wraps
+    only the Claude call itself, so a TypeError there is essentially
+    always this SDK behavior, not a bug elsewhere in this module — a bug
+    in this module's own code outside that call still raises normally.
+
     Returns either:
       {"status": "no_match", "reason": "..."} — no recipe fits the
       constraints; the API is never called and no bad match is forced, or
-      {"status": "ok", "chosen_recipe": {...full db record...},
-       "explanation": "...", "candidates_considered": [...top N...]}
+      {"status": "ok", "mode": "llm" | "deterministic",
+       "chosen_recipe": {...full db record...}, "explanation": "...",
+       "candidates_considered": [...top N...],
+       "note": "..." (present only when mode="deterministic" because a
+       Claude call was attempted and failed — explains why)}
     """
     recipes = load_recipes(db_path)
     fitting = filter_by_meal_type(filter_by_prep_time(recipes, meal_prep_time_min), meal_type)
@@ -196,7 +244,16 @@ def recommend_recipe(
         fitting, layer1_output["protein_target_g"], layer1_output["fibre_target_g"],
         layer1_output["vitamin_focus"],
     )
-    result = ask_claude_to_choose(layer1_output, meal_prep_time_min, candidates, client=client)
+
+    if not use_llm:
+        return build_deterministic_explanation(candidates)
+
+    try:
+        result = ask_claude_to_choose(layer1_output, meal_prep_time_min, candidates, client=client)
+    except (anthropic.APIError, TypeError) as e:
+        fallback = build_deterministic_explanation(candidates)
+        fallback["note"] = f"Claude unavailable ({e}) — used a deterministic top-ranked pick instead."
+        return fallback
 
     chosen_name = result["chosen_recipe_name"]
     # Guaranteed to be found: chosen_name is enum-constrained to exactly
@@ -205,6 +262,7 @@ def recommend_recipe(
 
     return {
         "status": "ok",
+        "mode": "llm",
         "chosen_recipe": chosen_recipe,
         "explanation": result["explanation"],
         "candidates_considered": [build_candidate_summary(c) for c in candidates],

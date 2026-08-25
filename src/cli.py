@@ -179,20 +179,25 @@ def print_targets(target: dict) -> None:
 
 def get_recommendation(target: dict, meal_prep_time_min: int, meal_type: str | None) -> dict | None:
     print("\n=== Recipe recommendation ===")
-    try:
-        result = recommend_recipe(target, meal_prep_time_min, meal_type=meal_type)
-    except Exception as e:  # noqa: BLE001 — surface any API/auth error plainly, don't crash the CLI
-        print(f"Couldn't reach Claude: {e}")
-        print("If this is an authentication error, set ANTHROPIC_API_KEY or run "
-              "`ant auth login` in a terminal, then try again.")
-        return None
+    # recommend_recipe() itself catches Claude API failures (missing
+    # credentials, rate limits, network issues) and falls back to a
+    # deterministic top-ranked pick automatically — this call should not
+    # need its own try/except for that case. A remaining exception here
+    # would mean something else went wrong (e.g. the recipe database
+    # itself failed to load), so it's allowed to propagate rather than
+    # being hidden.
+    result = recommend_recipe(target, meal_prep_time_min, meal_type=meal_type)
 
     if result["status"] == "no_match":
         print(f"No match: {result['reason']}")
         return None
 
     recipe = result["chosen_recipe"]
-    print(f"Chosen: {recipe['name']} ({recipe['cuisine']})")
+    if result["mode"] == "deterministic":
+        print(f"Chosen (no AI — {result.get('note', 'Claude not used')}):")
+    else:
+        print("Chosen (explained by Claude):")
+    print(f"  {recipe['name']} ({recipe['cuisine']})")
     print(f"  {result['explanation']}")
     print(f"  Protein: {recipe['protein_g']:.1f} g | Fibre: {recipe['fibre_g']:.1f} g | "
           f"Calories: {recipe['calories']} | Prep time: {recipe['prep_time_min']} min")

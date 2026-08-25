@@ -64,18 +64,24 @@ yourself (see `data/SCHEMA.md` for the format, then `python
 src/data_pipeline.py && python src/train_model.py && python
 src/train_vitamin_model.py`).
 
-### Claude API credentials (for recipe recommendations only)
+### Claude API credentials (optional)
 
-Layer 1 (the target predictions) works with no setup. Layer 2 (asking
-Claude to pick and explain a recipe) needs credentials, either:
+**Everything works with zero setup, including recipe recommendations.**
+Layer 1 (the target predictions) never needed credentials. Layer 2
+(recipe recommendations) tries Claude for a natural-language explanation
+if credentials are available; if not — or on any API failure — it
+automatically falls back to a deterministic pick (the same top-ranked
+candidate Claude would have been shown, with a plain-template explanation
+built entirely from real `recipe_database.json` fields, no LLM involved).
+Both the CLI and the dashboard label which one you got.
+
+To get Claude's natural-language explanations instead of the fallback,
+either:
 
 - `export ANTHROPIC_API_KEY=...` (pay-per-use, from
   [console.anthropic.com](https://console.anthropic.com)), or
 - `ant auth login` (uses an existing Claude Pro/Max subscription instead
   — see the [Anthropic CLI](https://github.com/anthropics/anthropic-cli))
-
-Without either, everything else still works — the app shows a clear
-in-place error on the recommendation step instead of crashing.
 
 ### Run the dashboard
 

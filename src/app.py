@@ -95,16 +95,13 @@ with tab_today:
         st.subheader("Recipe recommendation")
         if st.button("Get recipe recommendation"):
             with st.spinner("Asking Claude to pick a recipe..."):
-                try:
-                    result = recommend_recipe(target, st.session_state["inputs"]["meal_prep_time_min"])
-                    st.session_state["recommendation"] = result
-                except Exception as e:  # noqa: BLE001 — surface any API/auth error plainly, don't crash the app
-                    st.error(
-                        f"Couldn't reach Claude: {e}\n\n"
-                        "If this is an authentication error, set ANTHROPIC_API_KEY or run "
-                        "`ant auth login` in a terminal, then try again."
-                    )
-                    st.session_state["recommendation"] = None
+                # recommend_recipe() catches Claude API failures itself
+                # (missing credentials, rate limits, network issues) and
+                # falls back to a deterministic top-ranked pick — no
+                # Anthropic account is required for this button to work.
+                st.session_state["recommendation"] = recommend_recipe(
+                    target, st.session_state["inputs"]["meal_prep_time_min"],
+                )
 
         recommendation = st.session_state.get("recommendation")
         if recommendation is not None:
@@ -112,6 +109,8 @@ with tab_today:
                 st.warning(recommendation["reason"])
             else:
                 recipe = recommendation["chosen_recipe"]
+                if recommendation["mode"] == "deterministic":
+                    st.info(f"No AI used — {recommendation.get('note', 'Claude not available')}")
                 st.success(f"**{recipe['name']}** ({recipe['cuisine']})")
                 st.write(recommendation["explanation"])
                 rcol1, rcol2, rcol3, rcol4 = st.columns(4)
