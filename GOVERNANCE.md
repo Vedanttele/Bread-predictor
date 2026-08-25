@@ -1,6 +1,6 @@
 # Governance
 
-Single source of truth for this project's foundational requirements — the
+Single source of truth for this project's foundational requirements the
 things that must hold true regardless of which phase is in progress. If a
 new foundational requirement comes up mid-project, it gets added here (with
 a changelog entry), not buried in a conversation or scattered across other
