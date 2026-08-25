@@ -27,7 +27,7 @@ comments, PRs, or other docs without re-stating it.
 - **HC-3 — Time-based splits only.**
   This is sequential daily data. Train/test splits are always chronological
   (train on earlier dates, test on later ones). Random shuffling or k-fold
-  with random assignment is never used — it leaks future context into
+  with random assignment is never used it leaks future context into
   training. See `data/SCHEMA.md` §4.
 
 - **HC-4 — `data/raw/` is read-only, with one controlled exception.**
@@ -35,7 +35,7 @@ comments, PRs, or other docs without re-stating it.
   cleans, or reformats files in place there. Derived data goes in
   `data/processed/`.
   Exception: `src/cli.py`'s "log what you actually ate" step appends to
-  `data/raw/app_actuals.csv` — a separate file from the manually-curated
+  `data/raw/app_actuals.csv` a separate file from the manually-curated
   `daily_context.csv`, which no code ever writes to. The append path is
   the *only* writer of `app_actuals.csv`, is append-only (never edits or
   deletes existing rows), and this is documented so the exception stays
@@ -46,10 +46,10 @@ comments, PRs, or other docs without re-stating it.
   concatenates every file in `data/raw/` before parsing dates, and
   `pandas.to_datetime` without an explicit format infers ONE format from
   early rows and silently misparses the rest if a second source uses a
-  different one — this dropped 220 of 221 rows the first time
+  different one this dropped 220 of 221 rows the first time
   `app_actuals.csv` (ISO dates) met `daily_context.csv` (DD/MM/YYYY).
   Fixed with `format="mixed"` plus a hard failure if parsing drops more
-  than half a batch — see `derive_date_fields` in `data_pipeline.py`.
+  than half a batch see `derive_date_fields` in `data_pipeline.py`.
 
 - **HC-5 — One phase per session.**
   Work proceeds one phase at a time per `PHASES.md`. Ask before starting the
@@ -58,7 +58,7 @@ comments, PRs, or other docs without re-stating it.
 ## How to amend this file
 
 1. Add or edit the rule under **Hard constraints**, keeping IDs stable
-   (never reuse a retired ID — mark it "retired" instead of deleting, so
+   (never reuse a retired ID mark it "retired" instead of deleting, so
    history stays legible).
 2. Add a row to the **Changelog** below.
 3. If the change affects other docs (README's constraints summary,
