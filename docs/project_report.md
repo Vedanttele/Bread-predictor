@@ -53,7 +53,7 @@ into future retraining without ever touching the original logged dataset.
 - **Zero missing values** in the current file — all 14 nullable columns
   are flagged and tracked (`*_missing` companion columns), but every flag
   is currently `False`. The missingness-handling code path exists and is
-  tested, but is untested *by real gaps* — see Limitations.
+  tested.
 - **Chronological train/test split**, never random: 176 train days / 44
   test days (last 20%), per `GOVERNANCE.md` HC-3.
 - `roti_count` distribution: 1→23, 2→67, 3→93, 4→31, 5→6 (n=220).
